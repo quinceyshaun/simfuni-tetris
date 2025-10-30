@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -18,15 +19,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 10px;
+            touch-action: manipulation;
         }
 
         .game-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             max-width: 600px;
+            width: 100%;
         }
 
         .header {
@@ -39,15 +42,17 @@
         }
 
         .logo img {
-            max-width: 300px;
+            max-width: 250px;
+            width: 80%;
             height: auto;
         }
 
         .game-area {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             align-items: flex-start;
+            flex-wrap: wrap;
         }
 
         .board-container {
@@ -55,17 +60,24 @@
             padding: 10px;
             border-radius: 10px;
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            width: fit-content;
+            margin: 0 auto;
         }
 
         canvas {
             display: block;
             border: 2px solid #333;
+            max-width: 100%;
+            height: auto;
         }
 
         .side-panel {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
+            flex-direction: row;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
         }
 
         .info-box {
@@ -74,17 +86,19 @@
             border-radius: 10px;
             color: white;
             text-align: center;
-            min-width: 150px;
+            min-width: 120px;
+            flex: 1;
+            max-width: 150px;
         }
 
         .info-label {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.9;
             margin-bottom: 5px;
         }
 
         .info-value {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: bold;
         }
 
@@ -93,12 +107,13 @@
             padding: 15px;
             border-radius: 10px;
             text-align: center;
+            min-width: 120px;
         }
 
         .next-label {
             color: white;
             margin-bottom: 10px;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         #nextCanvas {
@@ -115,15 +130,66 @@
         .controls h3 {
             margin-bottom: 10px;
             color: #333;
+            font-size: 16px;
         }
 
-        .controls p {
-            margin: 5px 0;
-            color: #666;
-            font-size: 14px;
+        .keyboard-controls {
+            display: none;
         }
 
-        button {
+        .touch-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #ED552F, #FD51A7);
+            color: white;
+            border: none;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.1s;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+
+        .control-btn.rotate {
+            grid-column: 2;
+        }
+
+        .control-btn.left {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .control-btn.down {
+            grid-column: 2;
+            grid-row: 2;
+        }
+
+        .control-btn.right {
+            grid-column: 3;
+            grid-row: 2;
+        }
+
+        .control-btn.drop {
+            grid-column: 1 / 4;
+            grid-row: 3;
+            padding: 15px;
+            font-size: 16px;
+        }
+
+        button.start-btn {
             background: linear-gradient(135deg, #ED552F, #FD51A7);
             color: white;
             border: none;
@@ -135,13 +201,14 @@
             margin-top: 15px;
             width: 100%;
             transition: transform 0.2s;
+            touch-action: manipulation;
         }
 
-        button:hover {
+        button.start-btn:hover {
             transform: scale(1.05);
         }
 
-        button:active {
+        button.start-btn:active {
             transform: scale(0.95);
         }
 
@@ -151,12 +218,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 20px;
             box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
             text-align: center;
             display: none;
             z-index: 1000;
+            max-width: 90%;
         }
 
         .game-over.show {
@@ -168,14 +236,49 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            font-size: 36px;
+            font-size: 32px;
             margin-bottom: 20px;
         }
 
-        @media (max-width: 600px) {
+        @media (min-width: 600px) {
             .game-area {
+                flex-wrap: nowrap;
+            }
+
+            .side-panel {
                 flex-direction: column;
-                align-items: center;
+                width: auto;
+            }
+
+            .info-box {
+                max-width: none;
+            }
+
+            .keyboard-controls {
+                display: block;
+            }
+
+            .touch-controls {
+                display: none;
+            }
+        }
+
+        @media (max-width: 599px) {
+            .game-container {
+                padding: 15px;
+            }
+
+            canvas {
+                width: 100%;
+            }
+
+            .info-value {
+                font-size: 24px;
+            }
+
+            .control-btn {
+                padding: 15px;
+                font-size: 20px;
             }
         }
     </style>
@@ -213,16 +316,27 @@
 
         <div class="controls">
             <h3>Controls</h3>
-            <p>← → : Move | ↑ : Rotate | ↓ : Drop Faster</p>
-            <p>SPACE : Hard Drop</p>
-            <button id="startBtn">START GAME</button>
+            <div class="keyboard-controls">
+                <p style="color: #666; font-size: 14px; margin: 5px 0;">← → : Move | ↑ : Rotate | ↓ : Drop Faster</p>
+                <p style="color: #666; font-size: 14px; margin: 5px 0;">SPACE : Hard Drop</p>
+            </div>
+            
+            <div class="touch-controls">
+                <button class="control-btn rotate" id="rotateBtn">↻</button>
+                <button class="control-btn left" id="leftBtn">←</button>
+                <button class="control-btn down" id="downBtn">↓</button>
+                <button class="control-btn right" id="rightBtn">→</button>
+                <button class="control-btn drop" id="dropBtn">HARD DROP</button>
+            </div>
+
+            <button class="start-btn" id="startBtn">START GAME</button>
         </div>
     </div>
 
     <div class="game-over" id="gameOver">
         <h2>GAME OVER</h2>
         <p style="font-size: 20px; margin: 20px 0;">Final Score: <span id="finalScore">0</span></p>
-        <button id="restartBtn">PLAY AGAIN</button>
+        <button class="start-btn" id="restartBtn">PLAY AGAIN</button>
     </div>
 
     <script>
@@ -235,25 +349,24 @@
         const ROWS = 20;
         const BLOCK_SIZE = 30;
 
-        // SIMFUNI brand colors for pieces
         const COLORS = [
-            '#FFB343', // I piece
-            '#645C23', // O piece
-            '#ED552F', // T piece
-            '#A10046', // S piece
-            '#FD51A7', // Z piece
-            '#FFFFFF', // J piece
-            '#8D9DB8'  // L piece
+            '#FFB343',
+            '#645C23',
+            '#ED552F',
+            '#A10046',
+            '#FD51A7',
+            '#FFFFFF',
+            '#8D9DB8'
         ];
 
         const SHAPES = [
-            [[1,1,1,1]], // I
-            [[1,1],[1,1]], // O
-            [[0,1,0],[1,1,1]], // T
-            [[0,1,1],[1,1,0]], // S
-            [[1,1,0],[0,1,1]], // Z
-            [[1,0,0],[1,1,1]], // J
-            [[0,0,1],[1,1,1]]  // L
+            [[1,1,1,1]],
+            [[1,1],[1,1]],
+            [[0,1,0],[1,1,1]],
+            [[0,1,1],[1,1,0]],
+            [[1,1,0],[0,1,1]],
+            [[1,0,0],[1,1,1]],
+            [[0,0,1],[1,1,1]]
         ];
 
         let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
@@ -263,6 +376,7 @@
         let dropCounter = 0;
         let dropInterval = 1000;
         let lastTime = 0;
+        let isPlaying = false;
 
         let currentPiece = null;
         let nextPiece = null;
@@ -432,6 +546,8 @@
         }
 
         function update(time = 0) {
+            if (!isPlaying) return;
+            
             const deltaTime = time - lastTime;
             lastTime = time;
             dropCounter += deltaTime;
@@ -457,18 +573,21 @@
             nextPiece = createRandomPiece();
             updateScore();
             document.getElementById('gameOver').classList.remove('show');
+            isPlaying = true;
             cancelAnimationFrame(gameLoop);
             gameLoop = requestAnimationFrame(update);
         }
 
         function gameOver() {
+            isPlaying = false;
             cancelAnimationFrame(gameLoop);
             document.getElementById('finalScore').textContent = score;
             document.getElementById('gameOver').classList.add('show');
         }
 
+        // Keyboard controls
         document.addEventListener('keydown', e => {
-            if (!currentPiece) return;
+            if (!currentPiece || !isPlaying) return;
 
             switch(e.key) {
                 case 'ArrowLeft':
@@ -484,10 +603,47 @@
                     currentPiece.rotate();
                     break;
                 case ' ':
+                    e.preventDefault();
                     currentPiece.hardDrop();
                     break;
             }
             drawBoard();
+        });
+
+        // Touch controls
+        document.getElementById('leftBtn').addEventListener('click', () => {
+            if (currentPiece && isPlaying) {
+                currentPiece.move(-1);
+                drawBoard();
+            }
+        });
+
+        document.getElementById('rightBtn').addEventListener('click', () => {
+            if (currentPiece && isPlaying) {
+                currentPiece.move(1);
+                drawBoard();
+            }
+        });
+
+        document.getElementById('downBtn').addEventListener('click', () => {
+            if (currentPiece && isPlaying) {
+                currentPiece.drop();
+                drawBoard();
+            }
+        });
+
+        document.getElementById('rotateBtn').addEventListener('click', () => {
+            if (currentPiece && isPlaying) {
+                currentPiece.rotate();
+                drawBoard();
+            }
+        });
+
+        document.getElementById('dropBtn').addEventListener('click', () => {
+            if (currentPiece && isPlaying) {
+                currentPiece.hardDrop();
+                drawBoard();
+            }
         });
 
         document.getElementById('startBtn').addEventListener('click', startGame);
